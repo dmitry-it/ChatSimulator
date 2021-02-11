@@ -8,5 +8,6 @@ namespace UsersSystem
     {
         public abstract List<UserData> GetAllUsers();
         public abstract UserData GetChatOwner();
+        public abstract UserData GetUserWithId(int id);
     }
 }

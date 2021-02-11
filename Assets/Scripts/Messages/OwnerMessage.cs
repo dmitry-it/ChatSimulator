@@ -4,7 +4,7 @@ namespace Messages
 {
     public class OwnerMessage : ChatMessage
     {
-        public OwnerMessage(ChatMessageData data) : base(data)
+        public OwnerMessage(ChatMessageData data, UserData userData) : base(data, userData)
         {
         }
     }

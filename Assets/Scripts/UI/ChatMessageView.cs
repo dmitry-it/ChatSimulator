@@ -18,11 +18,11 @@ namespace UI
 
         public UnityEvent onRemoveButtonClickEvent = new UnityEvent();
 
-        protected ChatMessage _messageData;
+        protected ChatMessage MessageData;
 
-        public int Id => _messageData.Id;
-        public int FromUserId => _messageData.FromUser.id;
-
+        public int Id => MessageData.Id;
+        public int FromUserId => MessageData.FromUser.id;
+        public bool IsOwnersMessage => MessageData is OwnerMessage;
         protected void Awake()
         {
             Assert.IsNotNull(nameText);
@@ -55,7 +55,7 @@ namespace UI
 
         public virtual void FillWithInfo(ChatMessage messageData)
         {
-            _messageData = messageData;
+            MessageData = messageData;
             nameText.text = messageData.FromUser.name;
             bodyText.text = messageData.Text;
             dateText.text = messageData.Date;

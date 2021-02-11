@@ -63,7 +63,7 @@ namespace UI
         protected override void PlayDestroyAnimation(Action callback)
         {
             var vector2 = Vector2.zero;
-            switch (_messageData)
+            switch (MessageData)
             {
                 case OtherUserMessage _:
                     vector2 = new Vector2(-1000f, transform.localPosition.y);

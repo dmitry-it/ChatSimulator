@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Data
 {
@@ -8,7 +9,7 @@ namespace Data
         public int id;
         public string text;
         public string date;
-        public UserData fromUser = new UserData();
+        public int fromUserId;
 
         private ChatMessageData()
         {
@@ -20,8 +21,8 @@ namespace Data
             var message = new ChatMessageData
             {
                 text = text,
-                fromUser = sender,
-                date = $"{currentTime.Hour} : {currentTime.Minute:D2} : {currentTime.Second}"
+                fromUserId = sender.id,
+                date = $"{currentTime.Hour} : {currentTime.Minute:D2} : {currentTime.Second:D2}"
             };
             message.id = message.GetHashCode();
             return message;

@@ -4,12 +4,12 @@ namespace Messages
 {
     public abstract class ChatMessage
     {
-        protected ChatMessage(ChatMessageData data)
+        protected ChatMessage(ChatMessageData data, UserData userData)
         {
             Id = data.id;
             Text = data.text;
             Date = data.date;
-            FromUser = data.fromUser;
+            FromUser = userData;
         }
 
         public int Id { get; }

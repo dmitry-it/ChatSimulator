@@ -26,5 +26,10 @@ namespace UsersSystem
         {
             return _configuration.users.Find(x => x.id.Equals(_configuration.chatOwnerId));
         }
+
+        public override UserData GetUserWithId(int id)
+        {
+            return _configuration.users.Find(x => x.id.Equals(id));
+        }
     }
 }
