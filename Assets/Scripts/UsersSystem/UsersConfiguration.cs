@@ -4,7 +4,7 @@ using Data;
 
 namespace UsersSystem
 {
-   [Serializable]
+    [Serializable]
     public class UsersConfiguration
     {
         public int chatOwnerId;

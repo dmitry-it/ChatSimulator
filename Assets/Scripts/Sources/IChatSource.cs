@@ -1,7 +1,6 @@
 using System;
 using Data;
 
-
 namespace Sources
 {
     public interface IChatSource

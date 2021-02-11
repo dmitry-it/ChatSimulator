@@ -64,20 +64,14 @@ namespace UI
         {
             inputPanel.SetActive(false);
             finishEditButton.SetActive(true);
-            foreach (var messageView in MessageViews)
-            {
-                messageView.ShowRemoveButton();
-            }
+            foreach (var messageView in MessageViews) messageView.ShowRemoveButton();
         }
 
         public void OnFinishEditButtonClick()
         {
             inputPanel.SetActive(true);
             finishEditButton.SetActive(false);
-            foreach (var messageView in MessageViews)
-            {
-                messageView.HideRemoveButton();
-            }
+            foreach (var messageView in MessageViews) messageView.HideRemoveButton();
         }
     }
 }

@@ -8,18 +8,32 @@ namespace UI
 {
     public abstract class ChatView : MonoBehaviour, IReceiveListener, IDeleteRequestListener
     {
-        
+        protected readonly List<ChatMessageView>
+            MessageViews = new List<ChatMessageView>();
+
         /// <summary>
-        /// Called when user try to send Message
+        ///     Called when user try to delete Message
+        /// </summary>
+        protected DeleteMessageEvent DeleteMessageCall;
+
+        /// <summary>
+        ///     Called when user try to send Message
         /// </summary>
         protected SendMessageEvent SendMessageCall;
 
-        /// <summary>
-        /// Called when user try to delete Message
-        /// </summary>
-        protected DeleteMessageEvent DeleteMessageCall;
-        protected readonly List<ChatMessageView>
-            MessageViews = new List<ChatMessageView>();
+
+        protected void Awake()
+        {
+            DeleteMessageCall = new DeleteMessageEvent();
+            SendMessageCall = new SendMessageEvent();
+        }
+
+        public void OnCatchDeleteMessageRequest(int messageId)
+        {
+            RemoveMessage(messageId);
+        }
+
+        public abstract void OnReceiveMessage(ChatMessage message);
 
         protected abstract void AddMessage<T>(T messageData, GameObject prefab) where T : ChatMessage;
 
@@ -29,20 +43,6 @@ namespace UI
         {
             SendMessageCall.AddListener(sendCallback);
             DeleteMessageCall.AddListener(deleteCallback);
-        }
-
-
-        protected void Awake()
-        {
-            DeleteMessageCall = new DeleteMessageEvent();
-            SendMessageCall = new SendMessageEvent();
-        }
-
-        public abstract void OnReceiveMessage(ChatMessage message);
-
-        public void OnCatchDeleteMessageRequest(int messageId)
-        {
-            RemoveMessage(messageId);
         }
 
         protected class SendMessageEvent : UnityEvent<string>

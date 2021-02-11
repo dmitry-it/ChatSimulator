@@ -5,7 +5,7 @@ using UnityEngine.Assertions;
 
 namespace UsersSystem
 {
-    public class LocalUsersRepository :  UsersRepository
+    public class LocalUsersRepository : UsersRepository
     {
         [SerializeField] private TextAsset configFile;
         private UsersConfiguration _configuration;

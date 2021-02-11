@@ -13,13 +13,21 @@ namespace Sources
 {
     public class LocalFileSource : MonoBehaviour, IChatSource
     {
+        private UserData _currentUser;
         private string _filePath;
+
+        private ObservableCollection<ChatMessageData> _messages;
         private ChatMessageEvent ReceiveMessageEvent { get; set; }
         private RemoveMessageEvent DeleteMessageEvent { get; set; }
 
-        private ObservableCollection<ChatMessageData> _messages;
-
-        private UserData _currentUser;
+        private void Awake()
+        {
+            _filePath = Application.persistentDataPath + "/chat_log.txt";
+            ReceiveMessageEvent = new ChatMessageEvent();
+            DeleteMessageEvent = new RemoveMessageEvent();
+            _messages = new ObservableCollection<ChatMessageData>();
+            _messages.CollectionChanged += HandleCollectionChange;
+        }
 
         public void AddMessageListener(IReceiveListener listener)
         {
@@ -79,13 +87,9 @@ namespace Sources
         private void HandleMessage(ChatMessageData data)
         {
             if (data.fromUser.id == _currentUser.id)
-            {
                 ReceiveMessageEvent.Invoke(new OwnerMessage(data));
-            }
             else
-            {
                 ReceiveMessageEvent.Invoke(new OtherUserMessage(data));
-            }
         }
 
         private void SaveToLocalHistory()
@@ -98,30 +102,19 @@ namespace Sources
         {
             if (args.NewItems != null)
                 foreach (var newItem in args.NewItems)
-                {
                     if (newItem is ChatMessageData message)
                         HandleMessage(message);
-                }
 
 
             if (args.OldItems != null)
                 foreach (var deletedItem in args.OldItems)
-                {
                     if (deletedItem is ChatMessageData message)
                         DeleteMessageEvent.Invoke(message.id);
-                }
 
 
             SaveToLocalHistory();
         }
-        private void Awake()
-        {
-            _filePath = Application.persistentDataPath + "/chat_log.txt";
-            ReceiveMessageEvent = new ChatMessageEvent();
-            DeleteMessageEvent = new RemoveMessageEvent();
-            _messages = new ObservableCollection<ChatMessageData>();
-            _messages.CollectionChanged += HandleCollectionChange;
-        }
+
         private class RemoveMessageEvent : UnityEvent<int>
         {
         }

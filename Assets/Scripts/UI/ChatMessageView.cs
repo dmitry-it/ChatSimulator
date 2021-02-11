@@ -16,12 +16,12 @@ namespace UI
         [SerializeField] protected Image avatarImage;
         [SerializeField] protected GameObject deleteButton;
 
-        public int Id => _messageData.Id;
-        public int FromUserId => _messageData.FromUser.id;
-        
         public UnityEvent onRemoveButtonClickEvent = new UnityEvent();
 
         protected ChatMessage _messageData;
+
+        public int Id => _messageData.Id;
+        public int FromUserId => _messageData.FromUser.id;
 
         protected void Awake()
         {

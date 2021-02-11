@@ -15,19 +15,12 @@ namespace Editor
         private const string ConfigFilePath = "/Resources/users_configuration.json";
         private const string AvatarsPath = "/Resources/Avatars/";
         private const int AvatarsEditorWidth = 3;
+        private readonly Dictionary<string, Texture> _avatarTextures = new Dictionary<string, Texture>();
         private UsersConfiguration _configuration;
-
-        private ReorderableList _usersList;
         private UserData _currentUser;
         private Vector2 _scrollPosition = Vector2.zero;
-        private readonly Dictionary<string, Texture> _avatarTextures = new Dictionary<string, Texture>();
 
-        [MenuItem("Tools/Chat Users Editor", false, 0)]
-        private static void Init()
-        {
-            var window = GetWindow(typeof(UsersEditor));
-            window.titleContent = new GUIContent("Chat Users Editor");
-        }
+        private ReorderableList _usersList;
 
         private void OnEnable()
         {
@@ -43,6 +36,13 @@ namespace Editor
             DrawUsers();
         }
 
+        [MenuItem("Tools/Chat Users Editor", false, 0)]
+        private static void Init()
+        {
+            var window = GetWindow(typeof(UsersEditor));
+            window.titleContent = new GUIContent("Chat Users Editor");
+        }
+
         private void DrawButtons()
         {
             GUILayout.Space(15);
@@ -50,14 +50,9 @@ namespace Editor
             GUILayout.BeginHorizontal();
 
             if (GUILayout.Button("New", GUILayout.Width(100), GUILayout.Height(50)))
-            {
                 _configuration = new UsersConfiguration();
-            }
 
-            if (GUILayout.Button("Save", GUILayout.Width(100), GUILayout.Height(50)))
-            {
-                SaveConfiguration();
-            }
+            if (GUILayout.Button("Save", GUILayout.Width(100), GUILayout.Height(50))) SaveConfiguration();
 
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
@@ -100,14 +95,11 @@ namespace Editor
 
         private void DrawUserData(UserData userData, bool allowEdit = false)
         {
-            
             if (allowEdit)
             {
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Make an Owner", GUILayout.Width(150), GUILayout.Height(30)))
-                {
                     _configuration.chatOwnerId = userData.id;
-                }
 
                 GUILayout.EndHorizontal();
             }
@@ -133,7 +125,6 @@ namespace Editor
 
 
             GUILayout.EndHorizontal();
-            
         }
 
         private void DrawAvatarEditor()
@@ -151,9 +142,7 @@ namespace Editor
             foreach (var pair in _avatarTextures)
             {
                 if (GUILayout.Button(pair.Value, GUILayout.Width(100), GUILayout.Height(100)))
-                {
                     _currentUser.avatarName = pair.Key;
-                }
 
                 counter++;
                 if (counter != AvatarsEditorWidth) continue;
@@ -191,17 +180,12 @@ namespace Editor
                 selectElement(selectedElement);
             };
 
-            if (createElement != null)
-            {
-                list.onAddDropdownCallback = (buttonRect, l) => { createElement(); };
-            }
+            if (createElement != null) list.onAddDropdownCallback = (buttonRect, l) => { createElement(); };
 
             list.onRemoveCallback = l =>
             {
-                if (!EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete this item?", "Yes", "No"))
-                {
-                    return;
-                }
+                if (!EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete this item?", "Yes",
+                    "No")) return;
 
                 var element = elements[l.index];
                 removeElement(element);
