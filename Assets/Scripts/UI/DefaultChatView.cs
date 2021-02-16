@@ -15,7 +15,7 @@ namespace UI
         [SerializeField] private GameObject finishEditButton;
 
 
-        protected override void AddMessage<T>(T messageData, GameObject prefab)
+        protected void AddMessage<T>(T messageData, GameObject prefab)  where T : ChatMessage
         {
             var go = Instantiate(prefab);
             var messageView = go.GetComponent<ChatMessageView>();

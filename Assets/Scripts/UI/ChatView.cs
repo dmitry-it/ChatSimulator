@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Messages;
 using Sources;
@@ -21,6 +22,7 @@ namespace UI
         /// </summary>
         protected SendMessageEvent SendMessageCall;
 
+        public readonly UnityEvent OnClose = new UnityEvent();
 
         protected void Awake()
         {
@@ -34,15 +36,18 @@ namespace UI
         }
 
         public abstract void OnReceiveMessage(ChatMessage message);
-
-        protected abstract void AddMessage<T>(T messageData, GameObject prefab) where T : ChatMessage;
-
+        
         protected abstract void RemoveMessage(int messageId);
 
         public void InitListeners(UnityAction<string> sendCallback, UnityAction<int> deleteCallback)
         {
             SendMessageCall.AddListener(sendCallback);
             DeleteMessageCall.AddListener(deleteCallback);
+        }
+
+        protected void OnDestroy()
+        {
+            OnClose.Invoke();
         }
 
         protected class SendMessageEvent : UnityEvent<string>

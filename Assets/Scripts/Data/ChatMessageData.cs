@@ -17,12 +17,11 @@ namespace Data
 
         public static ChatMessageData Create(string text, UserData sender)
         {
-            var currentTime = DateTime.Now;
             var message = new ChatMessageData
             {
                 text = text,
                 fromUserId = sender.id,
-                date = $"{currentTime.Hour} : {currentTime.Minute:D2} : {currentTime.Second:D2}"
+                date =  DateTime.Now.ToString("HH:mm:ss")
             };
             message.id = message.GetHashCode();
             return message;
