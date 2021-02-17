@@ -14,23 +14,40 @@ namespace UI
         [SerializeField] private GameObject inputPanel;
         [SerializeField] private GameObject finishEditButton;
 
+        private MessageViewsPool _ownerPool;
+        private MessageViewsPool _usualPool;
 
-        protected void AddMessage<T>(T messageData, GameObject prefab)  where T : ChatMessage
+        private new void Awake()
         {
-            var go = Instantiate(prefab);
-            var messageView = go.GetComponent<ChatMessageView>();
+            _ownerPool = scrollViewContent.gameObject.AddComponent<MessageViewsPool>();
+            _ownerPool.Create(ownerMessagePrefab, 50);
+            _usualPool = scrollViewContent.gameObject.AddComponent<MessageViewsPool>();
+            _usualPool.Create(usualMessagePrefab, 50);
+            base.Awake();
+        }
+
+        private void AddMessage<T>(T messageData, MessageViewsPool pool) where T : ChatMessage
+        {
+            var messageView = pool.GetChatView();
             messageView.FillWithInfo(messageData);
             messageView.onRemoveButtonClickEvent.AddListener(() => { DeleteMessageCall.Invoke(messageData.Id); });
-            CheckMessagesBlock(messageData.FromUser.id);
             MessageViews.Add(messageView);
-            go.transform.SetParent(scrollViewContent, false);
+            CheckMessagesBlock(MessageViews.IndexOf(messageView));
+            messageView.transform.SetAsLastSibling();
         }
 
         protected override void RemoveMessage(int messageId)
         {
-            var message = MessageViews.Find(x => x.Id == messageId);
-            MessageViews.Remove(message);
-            message.DestroyWithAnimation();
+            var index = MessageViews.FindIndex(x => x.Id == messageId);
+            if (index < 0) return;
+            var message = MessageViews[index];
+            message.PlayDestroyAnimation(() =>
+            {
+                message.gameObject.GetComponent<MessageViewsPool.PolledObject>()?
+                    .ReturnToPool();
+                MessageViews.Remove(message);
+                CheckMessagesBlock(index);
+            });
         }
 
         public override void OnReceiveMessage(ChatMessage message)
@@ -38,19 +55,25 @@ namespace UI
             switch (message)
             {
                 case OwnerMessage ownerMessage:
-                    AddMessage(ownerMessage, ownerMessagePrefab);
+                    AddMessage(ownerMessage, _ownerPool);
                     break;
                 case OtherUserMessage otherUserMessage:
-                    AddMessage(otherUserMessage, usualMessagePrefab);
+                    AddMessage(otherUserMessage, _usualPool);
                     break;
             }
         }
 
-        private void CheckMessagesBlock(int userId)
+        private void CheckMessagesBlock(int index)
         {
-            var lastMessage = MessageViews.LastOrDefault();
-            if (lastMessage != null && lastMessage.FromUserId == userId)
-                lastMessage.HideAvatar();
+            if (index < 1) return;
+            var previous = MessageViews[index - 1];
+            if (previous == null) return;
+            if (previous.FromUserId == MessageViews[index].FromUserId)
+                previous.HideAvatar();
+            else
+            {
+                previous.ShowAvatar();
+            }
         }
 
         public void OnSendButtonClick()
@@ -64,14 +87,14 @@ namespace UI
         {
             inputPanel.SetActive(false);
             finishEditButton.SetActive(true);
-            foreach (var messageView in MessageViews.FindAll(x=>x.IsOwnersMessage)) messageView.ShowRemoveButton();
+            foreach (var messageView in MessageViews.Where(x => x.IsOwnersMessage)) messageView.ShowRemoveButton();
         }
 
         public void OnFinishEditButtonClick()
         {
             inputPanel.SetActive(true);
             finishEditButton.SetActive(false);
-            foreach (var messageView in MessageViews.FindAll(x=>x.IsOwnersMessage)) messageView.HideRemoveButton();
+            foreach (var messageView in MessageViews.Where(x => x.IsOwnersMessage)) messageView.HideRemoveButton();
         }
     }
 }

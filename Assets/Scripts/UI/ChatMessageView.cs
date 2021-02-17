@@ -38,20 +38,16 @@ namespace UI
             PlayAppearAnimation();
         }
 
-        protected virtual void PlayAppearAnimation(Action callback = null)
+        public virtual void PlayAppearAnimation(Action callback = null)
         {
             callback?.Invoke();
         }
 
-        protected virtual void PlayDestroyAnimation(Action callback)
+        public virtual void PlayDestroyAnimation(Action callback)
         {
             callback.Invoke();
         }
-
-        public void DestroyWithAnimation()
-        {
-            PlayDestroyAnimation(() => { Destroy(gameObject); });
-        }
+        
 
         public virtual void FillWithInfo(ChatMessage messageData)
         {

@@ -10,6 +10,7 @@ namespace UI
     {
         [SerializeField] private GameObject deleteButtonPanel;
         [SerializeField] private GameObject avatarCorner;
+       
         private CanvasGroup _canvasGroup;
 
         protected new void Awake()
@@ -52,7 +53,7 @@ namespace UI
             base.HideAvatar();
         }
 
-        protected override void PlayAppearAnimation(Action callback = null)
+        public override void PlayAppearAnimation(Action callback = null)
         {
             var sequence = DOTween.Sequence();
             sequence.AppendInterval(0.3f);
@@ -60,7 +61,7 @@ namespace UI
             sequence.OnComplete(() => { callback?.Invoke(); });
         }
 
-        protected override void PlayDestroyAnimation(Action callback)
+        public override void PlayDestroyAnimation(Action callback)
         {
             var vector2 = Vector2.zero;
             switch (MessageData)
