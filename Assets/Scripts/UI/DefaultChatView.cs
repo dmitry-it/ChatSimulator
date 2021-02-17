@@ -31,6 +31,7 @@ namespace UI
             var messageView = pool.GetChatView();
             messageView.FillWithInfo(messageData);
             messageView.onRemoveButtonClickEvent.AddListener(() => { DeleteMessageCall.Invoke(messageData.Id); });
+            messageView.ShowWithAnimation();
             MessageViews.Add(messageView);
             CheckMessagesBlock(MessageViews.IndexOf(messageView));
             messageView.transform.SetAsLastSibling();
@@ -41,7 +42,7 @@ namespace UI
             var index = MessageViews.FindIndex(x => x.Id == messageId);
             if (index < 0) return;
             var message = MessageViews[index];
-            message.PlayDestroyAnimation(() =>
+            message.HideWithAnimation(() =>
             {
                 message.gameObject.GetComponent<MessageViewsPool.PolledObject>()?
                     .ReturnToPool();

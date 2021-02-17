@@ -24,7 +24,6 @@ namespace UI
         public ChatMessageView GetChatView()
         {
             var view = _instances.Count > 0 ? _instances.Pop() : CreateInstance(_prefab);
-            view.gameObject.SetActive(true);
             return view;
         }
 

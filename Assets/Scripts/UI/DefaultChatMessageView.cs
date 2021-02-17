@@ -53,15 +53,16 @@ namespace UI
             base.HideAvatar();
         }
 
-        public override void PlayAppearAnimation(Action callback = null)
+        public override void ShowWithAnimation(Action callback = null)
         {
+            gameObject.SetActive(true);
             var sequence = DOTween.Sequence();
             sequence.AppendInterval(0.3f);
             sequence.Append(_canvasGroup.DOFade(1f, 1f));
             sequence.OnComplete(() => { callback?.Invoke(); });
         }
 
-        public override void PlayDestroyAnimation(Action callback)
+        public override void HideWithAnimation(Action callback)
         {
             var vector2 = Vector2.zero;
             switch (MessageData)

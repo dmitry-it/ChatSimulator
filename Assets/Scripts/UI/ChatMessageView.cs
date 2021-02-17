@@ -35,15 +35,14 @@ namespace UI
         {
             var button = deleteButton.AddComponent<Button>();
             button.onClick.AddListener(() => { onRemoveButtonClickEvent.Invoke(); });
-            PlayAppearAnimation();
         }
 
-        public virtual void PlayAppearAnimation(Action callback = null)
+        public virtual void ShowWithAnimation(Action callback = null)
         {
             callback?.Invoke();
         }
 
-        public virtual void PlayDestroyAnimation(Action callback)
+        public virtual void HideWithAnimation(Action callback)
         {
             callback.Invoke();
         }
